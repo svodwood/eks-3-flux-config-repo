@@ -20,7 +20,7 @@ spec:
       cpu: 10
       memory: 10Gi
   providerRef:
-    name: default
+    name: frontend-proxy
   ttlSecondsAfterEmpty: 60
   ttlSecondsUntilExpired: 3600
 ---
