@@ -1,0 +1,32 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storefront-s3-gw-proxy
+  namespace: saleor-storefront
+  labels:
+    app: saleor-storefront
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saleor-storefront
+  template:
+    metadata:
+      labels:
+        app: saleor-storefront
+    spec:
+      containers:
+      - name: nginx-s3-gateway
+        image: nginxinc/nginx-s3-gateway:unprivileged-oss-20221216
+        ports:
+        - containerPort: 80
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-type
+                  operator: In
+                  values:
+                  - frontend-proxy
