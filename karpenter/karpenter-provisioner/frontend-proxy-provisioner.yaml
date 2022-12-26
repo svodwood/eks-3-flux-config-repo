@@ -1,0 +1,38 @@
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: frontend-proxy-provisioner
+spec:
+  labels:
+    node-type: frontend-proxy
+  requirements:
+    - key: "karpenter.sh/capacity-type"
+      operator: In
+      values: ["on-demand"]
+    - key: "kubernetes.io/arch"
+      operator: In
+      values: ["arm64"]
+    - key: "node.kubernetes.io/instance-type"
+      operator: In
+      values: ["t4g.small", "t4g.medium", "t4g.large"]
+  limits:
+    resources:
+      cpu: 10
+      memory: 10Gi
+  providerRef:
+    name: default
+  ttlSecondsAfterEmpty: 60
+  ttlSecondsUntilExpired: 3600
+---
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: frontend-proxy
+spec:
+  amiFamily: Bottlerocket
+  subnetSelector:
+    karpenter.sh/discovery: cilium-web-demo
+  securityGroupSelector:
+    karpenter.sh/discovery: cilium-web-demo
+  tags:
+    Name: "KarpenterWorkerNode"
