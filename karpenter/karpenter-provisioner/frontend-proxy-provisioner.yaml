@@ -33,6 +33,6 @@ spec:
   subnetSelector:
     karpenter.sh/discovery: cilium-web-demo
   securityGroupSelector:
-    karpenter.sh/discovery: cilium-web-demo
+    aws-ids: "sg-0e4b5d6ff6f9b73e0, sg-02c8ed0e928f4cc54"
   tags:
     Name: "KarpenterWorkerNode"

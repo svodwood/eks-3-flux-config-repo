@@ -16,11 +16,46 @@ spec:
       labels:
         app: saleor-storefront
     spec:
+      serviceAccount: saleor-storefront-sa
+      serviceAccountName: saleor-storefront-sa
+      restartPolicy: Always
       containers:
       - name: nginx-s3-gateway
         image: nginxinc/nginx-s3-gateway:unprivileged-oss-20221216
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
+          name: http
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+        env:
+          - name: ALLOW_DIRECTORY_LIST
+            value: 'false'
+          - name: AWS_SIGS_VERSION
+            value: '4'
+          - name: S3_REGION
+            value: 'eu-central-1'
+          - name: S3_SERVER
+            value: s3.eu-central-1.amazonaws.com
+          - name: S3_BUCKET_NAME
+            value: 'saleor-storefront-cilium-demo'
+          - name: PROVIDE_INDEX_PAGE
+            value: 'true'
+          - name: S3_DEBUG
+            value: 'true'
+          - name: S3_SERVER_PROTO
+            value: 'https'
+          - name: S3_SERVER_PORT
+            value: '443'
+          - name: S3_STYLE
+            value: 'virtual'
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -30,3 +65,14 @@ spec:
                   operator: In
                   values:
                   - frontend-proxy
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: saleor-storefront-sa
+  namespace: saleor-storefront
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/saleor-storefront-sa
+    eks.amazonaws.com/sts-regional-endpoints: "true"
+  labels:
+    app: saleor-storefront
