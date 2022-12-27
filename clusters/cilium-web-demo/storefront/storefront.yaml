@@ -5,6 +5,8 @@ metadata:
   name: saleor-storefront
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: karpenter-provisioners
   interval: 10m
   retryInterval: 1m
   timeout: 15m
