@@ -2,22 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: storefront-s3-gw-proxy
-  namespace: saleor-storefront
+  name: dashboard-s3-gw-proxy
+  namespace: saleor-dashboard
   labels:
-    app: saleor-storefront
+    app: saleor-dashboard
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: saleor-storefront
+      app: saleor-dashboard
   template:
     metadata:
       labels:
-        app: saleor-storefront
+        app: saleor-dashboard
     spec:
-      serviceAccount: saleor-storefront-sa
-      serviceAccountName: saleor-storefront-sa
+      serviceAccount: saleor-dashboard-sa
+      serviceAccountName: saleor-dashboard-sa
       restartPolicy: Always
       containers:
       - name: nginx-s3-gateway
@@ -45,7 +45,7 @@ spec:
           - name: S3_SERVER
             value: s3.eu-central-1.amazonaws.com
           - name: S3_BUCKET_NAME
-            value: 'saleor-storefront-cilium-demo'
+            value: 'saleor-dashboard-cilium-demo'
           - name: PROVIDE_INDEX_PAGE
             value: 'true'
           - name: S3_DEBUG
@@ -71,22 +71,22 @@ spec:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: saleor-storefront-sa
-  namespace: saleor-storefront
+  name: saleor-dashboard-sa
+  namespace: saleor-dashboard
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/saleor-storefront-sa
+    eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/saleor-dashboard-sa
     eks.amazonaws.com/sts-regional-endpoints: "true"
   labels:
-    app: saleor-storefront
+    app: saleor-dashboard
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: storefront-s3-gw-proxy-svc
-  namespace: saleor-storefront
+  name: dashboard-s3-gw-proxy-svc
+  namespace: saleor-dashboard
 spec:
   selector:
-    app: saleor-storefront
+    app: saleor-dashboard
   ports:
     - protocol: TCP
       port: 8080
@@ -95,8 +95,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: storefront-s3-gw-proxy-ingress
-  namespace: saleor-storefront
+  name: dashboard-s3-gw-proxy-ingress
+  namespace: saleor-dashboard
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
@@ -109,6 +109,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: storefront-s3-gw-proxy-svc
+            name: dashboard-s3-gw-proxy-svc
             port:
               number: 8080
