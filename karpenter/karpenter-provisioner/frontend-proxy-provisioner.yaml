@@ -35,4 +35,4 @@ spec:
   securityGroupSelector:
     aws-ids: "sg-0e4b5d6ff6f9b73e0, sg-02c8ed0e928f4cc54"
   tags:
-    Name: "KarpenterWorkerNode"
+    Name: "frontend-proxy-node"

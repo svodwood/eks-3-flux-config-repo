@@ -1,0 +1,39 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: external-secrets
+  namespace: external-secrets
+spec:
+  targetNamespace: external-secrets
+  interval: 15m
+  chart:
+    spec:
+      chart: external-secrets
+      version: v0.7.0
+      sourceRef:
+        kind: HelmRepository
+        name: external-secrets
+        namespace: external-secrets
+      interval: 10m
+  values:
+    replicaCount: 2
+    leaderElect: true
+    nodeSelector:
+      eks.amazonaws.com/nodegroup: initial-nodegroup
+    serviceAccount:
+      create: true
+      name: "external-secrets-sa"
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/external-secrets-sa
+    webhook:
+      replicaCount: 2
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: initial-nodegroup
+    certController:
+      replicaCount: 2
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: initial-nodegroup
+  install:
+    crds: CreateReplace
+  upgrade:
+    crds: CreateReplace
