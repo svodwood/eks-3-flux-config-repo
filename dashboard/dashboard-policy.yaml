@@ -1,0 +1,32 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: saleor-dashboard
+  namespace: saleor-dashboard
+spec:
+  endpointSelector:
+    matchLabels:
+      "app: saleor-dashboard": ""
+  ingress:
+    - fromEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "8080"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+        - matchPattern: "*.s3.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
