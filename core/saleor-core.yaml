@@ -1,0 +1,174 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saleor-core
+  namespace: saleor-core
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saleor-core
+  template:
+    metadata:
+      labels:
+        app: saleor-core
+    spec:
+      serviceAccount: saleor-core-sa
+      serviceAccountName: saleor-core-sa
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-type
+                  operator: In
+                  values:
+                  - backend-core
+      restartPolicy: Always
+      initContainers:
+      - name: saleor-init-migrations
+        image: ghcr.io/saleor/saleor:3.1.39
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-postgresql
+                key: saleor-postgresql-connection-string
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-redis
+                key: saleor-redis-connection-string
+          - name: AWS_MEDIA_BUCKET_NAME
+            value: "saleor-media-silium-demo"
+          - name: AWS_STORAGE_BUCKET_NAME
+            value: "saleor-static-silium-demo"
+        command:
+          - "python"
+          - "manage.py"
+          - "makemigrations"
+      - name: saleor-init-migrate
+        image: ghcr.io/saleor/saleor:3.1.39
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-postgresql
+                key: saleor-postgresql-connection-string
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-redis
+                key: saleor-redis-connection-string
+          - name: AWS_MEDIA_BUCKET_NAME
+            value: "saleor-media-silium-demo"
+          - name: AWS_STORAGE_BUCKET_NAME
+            value: "saleor-static-silium-demo"
+        command:
+          - "python"
+          - "manage.py"
+          - "migrate"
+      - name: saleor-init-collectstatic
+        image: ghcr.io/saleor/saleor:3.1.39
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-postgresql
+                key: saleor-postgresql-connection-string
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-redis
+                key: saleor-redis-connection-string
+          - name: AWS_MEDIA_BUCKET_NAME
+            value: "saleor-media-silium-demo"
+          - name: AWS_STORAGE_BUCKET_NAME
+            value: "saleor-static-silium-demo"
+        command:
+          - "python"
+          - "manage.py"
+          - "collectstatic"
+          - "--noinput"
+      containers:
+      - name: saleor-api
+        image: ghcr.io/saleor/saleor:3.1.39
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256M"
+        livenessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 90
+          timeoutSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 8000
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-postgresql
+                key: saleor-postgresql-connection-string
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-redis
+                key: saleor-redis-connection-string
+          - name: AWS_MEDIA_BUCKET_NAME
+            value: "saleor-media-silium-demo"
+          - name: AWS_STORAGE_BUCKET_NAME
+            value: "saleor-static-silium-demo"
+        ports:
+          - containerPort:  8000
+            name:  saleor-api
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: saleor-core-sa
+  namespace: saleor-core
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/saleor-core-sa
+    eks.amazonaws.com/sts-regional-endpoints: "true"
+  labels:
+    app: saleor-core
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: core-svc
+  namespace: saleor-core
+spec:
+  selector:
+    app: saleor-core
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: saleor-api
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: core-ingress
+  namespace: saleor-core
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  ingressClassName: cilium
+  rules:
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: core-svc
+            port:
+              number: 8000

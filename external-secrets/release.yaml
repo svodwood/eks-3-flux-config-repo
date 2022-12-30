@@ -16,7 +16,7 @@ spec:
         namespace: external-secrets
       interval: 10m
   values:
-    replicaCount: 2
+    replicaCount: 1
     leaderElect: true
     nodeSelector:
       eks.amazonaws.com/nodegroup: managed-nodegroup
@@ -26,13 +26,13 @@ spec:
       annotations:
         eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/external-secrets-sa
     webhook:
-      replicaCount: 2
+      replicaCount: 1
       nodeSelector:
-        eks.amazonaws.com/nodegroup: initial-nodegroup
+        eks.amazonaws.com/nodegroup: managed-nodegroup
     certController:
-      replicaCount: 2
+      replicaCount: 1
       nodeSelector:
-        eks.amazonaws.com/nodegroup: initial-nodegroup
+        eks.amazonaws.com/nodegroup: managed-nodegroup
   install:
     crds: CreateReplace
   upgrade:
