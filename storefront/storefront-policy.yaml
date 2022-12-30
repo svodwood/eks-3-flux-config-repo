@@ -9,7 +9,7 @@ spec:
       app: saleor-storefront
   ingress:
     - fromEntities:
-        - world
+        - cluster
       toPorts:
         - ports:
             - port: "8080"
@@ -27,6 +27,11 @@ spec:
               - matchPattern: "*"
     - toFQDNs:
         - matchPattern: "*.s3.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
+    - toFQDNs:
+        - matchName: "sts.eu-central-1.amazonaws.com"
       toPorts:
         - ports:
             - port: "443"
