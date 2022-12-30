@@ -4,15 +4,10 @@ metadata:
   name: saleor-core
   namespace: saleor-core
 spec:
-  endpointSelector:
-    matchLabels:
-      app: saleor-core
+  endpointSelector: {}
   ingress:
     - fromEntities:
         - world
-      toPorts:
-        - ports:
-            - port: "8000"
   egress:
     - toEndpoints:
         - matchLabels:
