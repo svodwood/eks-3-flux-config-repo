@@ -10,10 +10,6 @@ spec:
   ingress:
     - fromEntities:
         - cluster
-      toPorts:
-        - ports:
-            port: "8000"
-            protocol: TCP
   egress:
     - toEndpoints:
         - matchLabels:
