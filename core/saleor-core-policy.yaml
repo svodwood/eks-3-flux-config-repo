@@ -21,12 +21,12 @@ spec:
             dns:
               - matchPattern: "*"
     - toFQDNs:
-        - matchPattern: "*.cache.amazonaws.com"
+        - matchPattern: "demo-saleor-core-redis-cluster-8544b0a.adxo96.ng.0001.euc1.cache.amazonaws.com"
       toPorts:
         - ports:
             - port: "6379"
     - toFQDNs:
-        - matchPattern: "*.rds.amazonaws.com"
+        - matchPattern: "saleor.celfnipmusup.eu-central-1.rds.amazonaws.com"
       toPorts:
         - ports:
             - port: "5432"
