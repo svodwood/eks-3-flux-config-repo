@@ -1,0 +1,42 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: saleor-core
+  namespace: saleor-core
+spec:
+  endpointSelector:
+    matchLabels:
+      app: saleor-core
+  ingress:
+    - fromEntities:
+        - world
+      toPorts:
+        - ports:
+            - port: "8000"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+        - matchPattern: "*.cache.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "6379"
+    - toFQDNs:
+        - matchPattern: "*.rds.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "5432"
+    - toFQDNs:
+        - matchPattern: "*.s3.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
