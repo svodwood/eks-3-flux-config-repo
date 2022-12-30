@@ -4,7 +4,9 @@ metadata:
   name: saleor-core
   namespace: saleor-core
 spec:
-  endpointSelector: {}
+  endpointSelector:
+    matchLabels:
+      app: saleor-core
   ingress:
     - fromEntities:
         - world
