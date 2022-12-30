@@ -124,6 +124,8 @@ spec:
             value: "saleor-media-silium-demo"
           - name: AWS_STORAGE_BUCKET_NAME
             value: "saleor-static-silium-demo"
+          - name: ALLOWED_HOSTS
+            value: "graphql.cilium.vodwood.codes"
         ports:
           - containerPort:  8000
             name:  saleor-api
