@@ -28,7 +28,7 @@ spec:
       restartPolicy: Always
       initContainers:
       - name: saleor-init-migrations
-        image: ghcr.io/saleor/saleor:3.1.39
+        image: ghcr.io/saleor/saleor:3.9.8
         env:
           - name: DATABASE_URL
             valueFrom:
@@ -49,7 +49,7 @@ spec:
           - "manage.py"
           - "makemigrations"
       - name: saleor-init-migrate
-        image: ghcr.io/saleor/saleor:3.1.39
+        image: ghcr.io/saleor/saleor:3.9.8
         env:
           - name: DATABASE_URL
             valueFrom:
@@ -70,7 +70,7 @@ spec:
           - "manage.py"
           - "migrate"
       - name: saleor-init-populate
-        image: ghcr.io/saleor/saleor:3.1.39
+        image: ghcr.io/saleor/saleor:3.9.8
         env:
           - name: DATABASE_URL
             valueFrom:
@@ -92,7 +92,7 @@ spec:
           - "populatedb"
           - "--createsuperuser"
       - name: saleor-init-collectstatic
-        image: ghcr.io/saleor/saleor:3.1.39
+        image: ghcr.io/saleor/saleor:3.9.8
         env:
           - name: DATABASE_URL
             valueFrom:
@@ -115,7 +115,7 @@ spec:
           - "--noinput"
       containers:
       - name: saleor-api
-        image: ghcr.io/saleor/saleor:3.1.39
+        image: ghcr.io/saleor/saleor:3.9.8
         imagePullPolicy: Always
         resources:
           requests:
