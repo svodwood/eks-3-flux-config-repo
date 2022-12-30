@@ -19,7 +19,7 @@ spec:
     replicaCount: 2
     leaderElect: true
     nodeSelector:
-      eks.amazonaws.com/nodegroup: initial-nodegroup
+      eks.amazonaws.com/nodegroup: managed-nodegroup
     serviceAccount:
       create: true
       name: "external-secrets-sa"
