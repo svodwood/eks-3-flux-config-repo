@@ -11,8 +11,6 @@ spec:
     - from:
         - ipBlock:
             cidr: 0.0.0.0/0
-      ports:
-        - port: 8000
   egress:
     - toEndpoints:
         - matchLabels:
