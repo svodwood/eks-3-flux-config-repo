@@ -8,8 +8,11 @@ spec:
     matchLabels:
       app: saleor-core
   ingress:
-    - fromEntities:
-        - world
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - port: 8000
   egress:
     - toEndpoints:
         - matchLabels:
