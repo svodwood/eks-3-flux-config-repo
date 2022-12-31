@@ -44,6 +44,10 @@ spec:
             value: "saleor-media-silium-demo"
           - name: AWS_STORAGE_BUCKET_NAME
             value: "saleor-static-silium-demo"
+          - name: AWS_STATIC_CUSTOM_DOMAIN
+            value: "static.cilium.vodwood.codes"
+          - name: AWS_MEDIA_CUSTOM_DOMAIN
+            value: "media.cilium.vodwood.codes"
         command:
           - "python"
           - "manage.py"
@@ -65,6 +69,10 @@ spec:
             value: "saleor-media-silium-demo"
           - name: AWS_STORAGE_BUCKET_NAME
             value: "saleor-static-silium-demo"
+          - name: AWS_STATIC_CUSTOM_DOMAIN
+            value: "static.cilium.vodwood.codes"
+          - name: AWS_MEDIA_CUSTOM_DOMAIN
+            value: "media.cilium.vodwood.codes"
         command:
           - "python"
           - "manage.py"
@@ -112,6 +120,10 @@ spec:
             value: "saleor-media-silium-demo"
           - name: AWS_STORAGE_BUCKET_NAME
             value: "saleor-static-silium-demo"
+          - name: AWS_STATIC_CUSTOM_DOMAIN
+            value: "static.cilium.vodwood.codes"
+          - name: AWS_MEDIA_CUSTOM_DOMAIN
+            value: "media.cilium.vodwood.codes"
         command:
           - "python"
           - "manage.py"
@@ -152,6 +164,10 @@ spec:
             value: "saleor-static-silium-demo"
           - name: ALLOWED_HOSTS
             value: "graphql.cilium.vodwood.codes"
+          - name: AWS_STATIC_CUSTOM_DOMAIN
+            value: "static.cilium.vodwood.codes"
+          - name: AWS_MEDIA_CUSTOM_DOMAIN
+            value: "media.cilium.vodwood.codes"
         ports:
           - containerPort:  8000
             name:  saleor-api
