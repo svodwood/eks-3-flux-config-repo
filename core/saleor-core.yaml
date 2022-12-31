@@ -129,6 +129,31 @@ spec:
           - "manage.py"
           - "collectstatic"
           - "--noinput"
+      - name: saleor-init-thumbnails
+        image: ghcr.io/saleor/saleor:3.9.8
+        env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-postgresql
+                key: saleor-postgresql-connection-string
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: saleor-redis
+                key: saleor-redis-connection-string
+          - name: AWS_MEDIA_BUCKET_NAME
+            value: "saleor-media-silium-demo"
+          - name: AWS_STORAGE_BUCKET_NAME
+            value: "saleor-static-silium-demo"
+          - name: AWS_STATIC_CUSTOM_DOMAIN
+            value: "static.cilium.vodwood.codes"
+          - name: AWS_MEDIA_CUSTOM_DOMAIN
+            value: "media.cilium.vodwood.codes"
+        command:
+          - "python"
+          - "manage.py"
+          - "create_thumbnails"
       containers:
       - name: saleor-api
         image: ghcr.io/saleor/saleor:3.9.8
