@@ -1,0 +1,205 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-assets-s3-gw-proxy
+  namespace: saleor-assets
+  labels:
+    app: saleor-media-assets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saleor-media-assets
+  template:
+    metadata:
+      labels:
+        app: saleor-media-assets
+    spec:
+      serviceAccount: saleor-assets-sa
+      serviceAccountName: saleor-assets-sa
+      restartPolicy: Always
+      containers:
+      - name: nginx-s3-gateway
+        image: nginxinc/nginx-s3-gateway:unprivileged-oss-20221216
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+        env:
+          - name: ALLOW_DIRECTORY_LIST
+            value: 'false'
+          - name: AWS_SIGS_VERSION
+            value: '4'
+          - name: S3_REGION
+            value: 'eu-central-1'
+          - name: S3_SERVER
+            value: s3.eu-central-1.amazonaws.com
+          - name: S3_BUCKET_NAME
+            value: 'saleor-media-silium-demo'
+          - name: PROVIDE_INDEX_PAGE
+            value: 'true'
+          - name: S3_DEBUG
+            value: 'true'
+          - name: S3_SERVER_PROTO
+            value: 'https'
+          - name: S3_SERVER_PORT
+            value: '443'
+          - name: S3_STYLE
+            value: 'virtual'
+          - name: JS_TRUSTED_CERT_PATH
+            value: '/etc/ssl/certs/Amazon_Root_CA_1.pem'
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-type
+                  operator: In
+                  values:
+                  - frontend-proxy
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-assets-s3-gw-proxy
+  namespace: saleor-assets
+  labels:
+    app: saleor-static-assets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saleor-static-assets
+  template:
+    metadata:
+      labels:
+        app: saleor-static-assets
+    spec:
+      serviceAccount: saleor-assets-sa
+      serviceAccountName: saleor-assets-sa
+      restartPolicy: Always
+      containers:
+      - name: nginx-s3-gateway
+        image: nginxinc/nginx-s3-gateway:unprivileged-oss-20221216
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+        readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+        env:
+          - name: ALLOW_DIRECTORY_LIST
+            value: 'false'
+          - name: AWS_SIGS_VERSION
+            value: '4'
+          - name: S3_REGION
+            value: 'eu-central-1'
+          - name: S3_SERVER
+            value: s3.eu-central-1.amazonaws.com
+          - name: S3_BUCKET_NAME
+            value: 'saleor-static-silium-demo'
+          - name: PROVIDE_INDEX_PAGE
+            value: 'true'
+          - name: S3_DEBUG
+            value: 'true'
+          - name: S3_SERVER_PROTO
+            value: 'https'
+          - name: S3_SERVER_PORT
+            value: '443'
+          - name: S3_STYLE
+            value: 'virtual'
+          - name: JS_TRUSTED_CERT_PATH
+            value: '/etc/ssl/certs/Amazon_Root_CA_1.pem'
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-type
+                  operator: In
+                  values:
+                  - frontend-proxy
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: saleor-assets-sa
+  namespace: saleor-assets
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/saleor-assets-sa
+    eks.amazonaws.com/sts-regional-endpoints: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: media-assets-s3-gw-proxy-svc
+  namespace: saleor-assets
+spec:
+  selector:
+    app: saleor-media-assets
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: static-assets-s3-gw-proxy-svc
+  namespace: saleor-assets
+spec:
+  selector:
+    app: saleor-static-assets
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: assets-s3-gw-proxy-ingress
+  namespace: saleor-assets
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+spec:
+  ingressClassName: cilium
+  rules:
+  - host: media.cilium.vodwood.codes 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: media-assets-s3-gw-proxy-svc
+            port:
+              number: 8080
+  - host: static.cilium.vodwood.codes 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: static-assets-s3-gw-proxy-svc
+            port:
+              number: 8080
