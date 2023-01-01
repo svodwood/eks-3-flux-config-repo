@@ -48,6 +48,8 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
+          - name: ENABLE_SSL
+            value: "False"
         command:
           - "python"
           - "manage.py"
@@ -73,6 +75,8 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
+          - name: ENABLE_SSL
+            value: "False"
         command:
           - "python"
           - "manage.py"
@@ -98,6 +102,8 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
+          - name: ENABLE_SSL
+            value: "False"
         command:
           - "python"
           - "manage.py"
@@ -124,6 +130,8 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
+          - name: ENABLE_SSL
+            value: "False"
         command:
           - "python"
           - "manage.py"
@@ -170,6 +178,8 @@ spec:
             value: "media.cilium.vodwood.codes"
           - name: CREATE_IMAGES_ON_DEMAND
             value: "True"
+          - name: ENABLE_SSL
+            value: "False"
         ports:
           - containerPort:  8000
             name:  saleor-api
