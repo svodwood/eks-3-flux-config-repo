@@ -5,7 +5,7 @@ metadata:
   name: saleor-core
   namespace: saleor-core
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: saleor-core
@@ -50,6 +50,8 @@ spec:
             value: "media.cilium.vodwood.codes"
           - name: ENABLE_SSL
             value: "False"
+          - name: DEBUG
+            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -77,6 +79,8 @@ spec:
             value: "media.cilium.vodwood.codes"
           - name: ENABLE_SSL
             value: "False"
+          - name: DEBUG
+            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -104,6 +108,8 @@ spec:
             value: "media.cilium.vodwood.codes"
           - name: ENABLE_SSL
             value: "False"
+          - name: DEBUG
+            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -132,6 +138,8 @@ spec:
             value: "media.cilium.vodwood.codes"
           - name: ENABLE_SSL
             value: "False"
+          - name: DEBUG
+            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -180,6 +188,8 @@ spec:
             value: "True"
           - name: ENABLE_SSL
             value: "False"
+          - name: DEBUG
+            value: "True"
         ports:
           - containerPort:  8000
             name:  saleor-api
