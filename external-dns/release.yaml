@@ -16,14 +16,10 @@ spec:
         namespace: kube-system
       interval: 10m
   values:
-    serviceAccount:
-      create: true
-      name: external-dns-controller-sa
-      annotations:
-        eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/external-dns-controller-sa
     nodeSelector:
       eks.amazonaws.com/nodegroup: managed-nodegroup
-  install:
-      crds: CreateReplace
-    upgrade:
-      crds: CreateReplace
+    serviceAccount:
+      create: true
+      name: "external-dns-controller-sa"
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/external-dns-controller-sa
