@@ -18,6 +18,11 @@ spec:
   values:
     replicaCount: 1
     installCRDs: true
+    serviceAccount:
+      create: true
+      name: cert-manager-sa
+      annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::289512055556:role/cert-manager-sa
     nodeSelector:
       eks.amazonaws.com/nodegroup: managed-nodegroup
   install:
