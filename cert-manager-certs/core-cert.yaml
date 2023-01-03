@@ -1,18 +1,12 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: ingress-shared-cert
+  name: ingress-core-cert
   namespace: saleor-core
 spec:
-  secretName: ingress-shared-cert
+  secretName: ingress-core-cert
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
   dnsNames:
-    - '*.cilium.vodwood.codes'
-  acme:
-    config:
-      - dns01:
-          provider: route53
-        domains:
-          - '*.cilium.vodwood.codes'
+    - 'graphql.cilium.vodwood.codes'

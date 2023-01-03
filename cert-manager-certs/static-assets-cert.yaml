@@ -1,12 +1,12 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
-  name: ingress-storefront-cert
-  namespace: saleor-storefront
+  name: ingress-static-assets-cert
+  namespace: saleor-assets
 spec:
-  secretName: ingress-storefront-cert
+  secretName: ingress-static-assets-cert
   issuerRef:
     name: letsencrypt-staging
     kind: ClusterIssuer
   dnsNames:
-    - 'store.cilium.vodwood.codes'
+    - 'static.cilium.vodwood.codes'
