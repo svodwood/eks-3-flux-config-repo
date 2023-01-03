@@ -49,7 +49,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./cert-manager-resources/issuer
+  path: ./cert-manager-issuer
   prune: true
   wait: true
 ---
@@ -67,6 +67,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./cert-manager-resources/certs
+  path: ./cert-manager-certs
   prune: true
   wait: true
