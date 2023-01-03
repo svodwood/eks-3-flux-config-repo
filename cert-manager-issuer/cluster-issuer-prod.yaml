@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-production
+  namespace: kube-system
+spec:
+  acme:
+    email: sergeyv@duck.com
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: acme-production-account-key
+    solvers:
+    - selector:
+        dnsZones:
+          - "cilium.vodwood.codes"
+          - "dashboard.cilium.vodwood.codes"
+          - "graphql.cilium.vodwood.codes"
+          - "media.cilium.vodwood.codes"
+          - "static.cilium.vodwood.codes"
+          - "store.cilium.vodwood.codes"
+      dns01:
+        route53:
+          region: eu-central-1
+          hostedZoneID: Z02368503A60QUCYJBXIX
