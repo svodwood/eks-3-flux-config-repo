@@ -13,6 +13,7 @@ spec:
     - selector:
         dnsZones:
           - "cilium.vodwood.codes"
+          - "*.cilium.vodwood.codes"
       dns01:
         route53:
           region: eu-central-1
