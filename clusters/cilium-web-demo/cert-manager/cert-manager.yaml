@@ -16,3 +16,57 @@ spec:
   path: ./cert-manager
   prune: true
   wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cert-manager-issuer
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cert-manager
+  interval: 2m
+  retryInterval: 1m
+  timeout: 15m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./cert-manager-issuer
+  prune: true
+  wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cert-manager-issuer
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cert-manager
+  interval: 2m
+  retryInterval: 1m
+  timeout: 15m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./cert-manager-resources/issuer
+  prune: true
+  wait: true
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: cert-manager-certs
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: cert-manager-issuer
+  interval: 2m
+  retryInterval: 1m
+  timeout: 15m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./cert-manager-resources/certs
+  prune: true
+  wait: true
