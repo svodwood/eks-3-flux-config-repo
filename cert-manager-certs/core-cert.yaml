@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: ingress-core-cert
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
   dnsNames:
     - 'graphql.cilium.vodwood.codes'

@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: ingress-dashboard-cert
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
   dnsNames:
     - 'dashboard.cilium.vodwood.codes'

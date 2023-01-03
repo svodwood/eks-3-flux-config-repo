@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: ingress-static-assets-cert
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
   dnsNames:
     - 'static.cilium.vodwood.codes'
