@@ -48,10 +48,6 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
-          - name: ENABLE_SSL
-            value: "False"
-          - name: DEBUG
-            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -77,10 +73,6 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
-          - name: ENABLE_SSL
-            value: "False"
-          - name: DEBUG
-            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -106,10 +98,6 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
-          - name: ENABLE_SSL
-            value: "False"
-          - name: DEBUG
-            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -136,10 +124,6 @@ spec:
             value: "static.cilium.vodwood.codes"
           - name: AWS_MEDIA_CUSTOM_DOMAIN
             value: "media.cilium.vodwood.codes"
-          - name: ENABLE_SSL
-            value: "False"
-          - name: DEBUG
-            value: "True"
         command:
           - "python"
           - "manage.py"
@@ -186,10 +170,6 @@ spec:
             value: "media.cilium.vodwood.codes"
           - name: CREATE_IMAGES_ON_DEMAND
             value: "True"
-          - name: ENABLE_SSL
-            value: "False"
-          - name: DEBUG
-            value: "True"
         ports:
           - containerPort:  8000
             name:  saleor-api
@@ -217,24 +197,32 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: saleor-api
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: core-ingress
-#   namespace: saleor-core
-#   annotations:
-#     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-#     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-# spec:
-#   ingressClassName: cilium
-#   rules:
-#   - http:
-#       paths:
-#       - path: /
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: core-svc
-#             port:
-#               number: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: core-ingress
+  namespace: saleor-core
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+spec:
+  tls:
+  - hosts:
+    - graphql.cilium.vodwood.codes
+    secretName: ingress-core-cert
+  ingressClassName: cilium
+  rules:
+  - host: graphql.cilium.vodwood.codes 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: core-svc
+            port:
+              number: 8000
