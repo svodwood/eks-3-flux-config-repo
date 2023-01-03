@@ -17,6 +17,7 @@ spec:
       interval: 10m
   values:
     replicaCount: 1
+    installCRDs: true
     nodeSelector:
       eks.amazonaws.com/nodegroup: managed-nodegroup
   install:
