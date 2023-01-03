@@ -181,6 +181,13 @@ metadata:
     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
+  tls:
+  - hosts:
+    - media.cilium.vodwood.codes
+    secretName: ingress-media-assets-cert
+  - hosts:
+    - static.cilium.vodwood.codes
+    secretName: ingress-static-assets-cert
   ingressClassName: cilium
   rules:
   - host: media.cilium.vodwood.codes 
