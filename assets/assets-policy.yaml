@@ -1,0 +1,76 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: saleor-media-assets
+  namespace: saleor-assets
+spec:
+  endpointSelector:
+    matchLabels:
+      app: saleor-media-assets
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: "8080"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+        - matchPattern: "s3.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
+    - toFQDNs:
+        - matchName: "sts.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: saleor-static-assets
+  namespace: saleor-assets
+spec:
+  endpointSelector:
+    matchLabels:
+      app: saleor-static-assets
+  ingress:
+    - fromEntities:
+        - cluster
+      toPorts:
+        - ports:
+            - port: "8080"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+        - matchPattern: "s3.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
+    - toFQDNs:
+        - matchName: "sts.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
