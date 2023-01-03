@@ -18,6 +18,8 @@ spec:
   values:
     replicaCount: 1
     installCRDs: true
+    securityContext:
+      fsGroup: 1001
     serviceAccount:
       create: true
       name: cert-manager-sa
