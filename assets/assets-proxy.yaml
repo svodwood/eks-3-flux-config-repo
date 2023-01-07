@@ -193,16 +193,6 @@ spec:
     secretName: ingress-static-assets-cert
   ingressClassName: cilium
   rules:
-  - host: media.cilium.vodwood.codes 
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: media-assets-s3-gw-proxy-svc
-            port:
-              number: 8080
   - host: static.cilium.vodwood.codes 
     http:
       paths:
@@ -211,5 +201,15 @@ spec:
         backend:
           service:
             name: static-assets-s3-gw-proxy-svc
+            port:
+              number: 8080
+  - host: media.cilium.vodwood.codes 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: media-assets-s3-gw-proxy-svc
             port:
               number: 8080
