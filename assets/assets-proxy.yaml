@@ -200,32 +200,32 @@ spec:
 #             name: static-assets-s3-gw-proxy-svc
 #             port:
 #               number: 8080
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: media-s3-gw-proxy-ingress
-#   namespace: saleor-assets
-#   annotations:
-#     service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
-#     service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
-#     service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
-#     service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
-#     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
-# spec:
-#   tls:
-#   - hosts:
-#     - media.cilium.vodwood.codes
-#     secretName: ingress-media-assets-cert
-#   ingressClassName: cilium
-#   rules:
-#   - host: media.cilium.vodwood.codes 
-#     http:
-#       paths:
-#       - path: /
-#         pathType: Prefix
-#         backend:
-#           service:
-#             name: media-assets-s3-gw-proxy-svc
-#             port:
-#               number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: media-s3-gw-proxy-ingress
+  namespace: saleor-assets
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+spec:
+  tls:
+  - hosts:
+    - media.cilium.vodwood.codes
+    secretName: ingress-media-assets-cert
+  ingressClassName: cilium
+  rules:
+  - host: media.cilium.vodwood.codes 
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: media-assets-s3-gw-proxy-svc
+            port:
+              number: 8080
