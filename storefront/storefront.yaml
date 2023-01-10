@@ -19,7 +19,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: sergeyv-storefront
-        image: 289512055556.dkr.ecr.eu-central-1.amazonaws.com/sergeyv-storefront:latest
+        image: 289512055556.dkr.ecr.eu-central-1.amazonaws.com/sergeyv-storefront:1.0
         imagePullPolicy: IfNotPresent
         command:
           - sh
