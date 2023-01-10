@@ -25,8 +25,13 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toEntities:
-        - world
+    - toFQDNs:
+        - matchName: "media.cilium.vodwood.codes"
+      toPorts:
+        - ports:
+            - port: "443"
+    - toFQDNs:
+        - matchName: "graphql.cilium.vodwood.codes"
       toPorts:
         - ports:
             - port: "443"
