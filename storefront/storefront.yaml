@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saleor-storefront
+  namespace: saleor-storefront
+  labels:
+    app: saleor-storefront
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: saleor-storefront
+  template:
+    metadata:
+      labels:
+        app: saleor-storefront
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: sergeyv-storefront
+        image: 289512055556.dkr.ecr.eu-central-1.amazonaws.com/sergeyv-storefront:latest
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+          - -c
+          - '(nginx &) && pnpm turbo run start --filter=storefront...'
+        ports:
+        - containerPort: 3000
+          name: http
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 90
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                - key: node-type
+                  operator: In
+                  values:
+                  - backend-core
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: storefront-s3-gw-proxy-svc
+  namespace: saleor-storefront
+spec:
+  selector:
+    app: saleor-storefront
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: http
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: storefront-s3-gw-proxy-ingress
+  namespace: saleor-storefront
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-proxy-protocol: "*"
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: "http"
+spec:
+  tls:
+  - hosts:
+    - store.cilium.vodwood.codes
+    secretName: ingress-storefront-cert
+  ingressClassName: cilium
+  rules:
+  - host: store.cilium.vodwood.codes
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: storefront-s3-gw-proxy-svc
+            port:
+              number: 3000

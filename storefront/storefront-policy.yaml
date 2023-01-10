@@ -12,7 +12,7 @@ spec:
         - cluster
       toPorts:
         - ports:
-            - port: "8080"
+            - port: "3000"
   egress:
     - toEndpoints:
         - matchLabels:
@@ -25,13 +25,3 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toFQDNs:
-        - matchPattern: "s3.eu-central-1.amazonaws.com"
-      toPorts:
-        - ports:
-            - port: "443"
-    - toFQDNs:
-        - matchName: "sts.eu-central-1.amazonaws.com"
-      toPorts:
-        - ports:
-            - port: "443"
