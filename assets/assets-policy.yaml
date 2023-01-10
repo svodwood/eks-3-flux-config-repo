@@ -26,18 +26,13 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    # - toFQDNs:
-    #     - matchPattern: "s3.eu-central-1.amazonaws.com"
-    #   toPorts:
-    #     - ports:
-    #         - port: "443"
-    # - toFQDNs:
-    #     - matchName: "sts.eu-central-1.amazonaws.com"
-    #   toPorts:
-    #     - ports:
-    #         - port: "443"
-    - toEntities:
-        - world
+    - toFQDNs:
+        - matchPattern: "s3.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
+    - toFQDNs:
+        - matchName: "sts.eu-central-1.amazonaws.com"
       toPorts:
         - ports:
             - port: "443"
@@ -69,18 +64,13 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    # - toFQDNs:
-    #     - matchPattern: "s3.eu-central-1.amazonaws.com"
-    #   toPorts:
-    #     - ports:
-    #         - port: "443"
-    # - toFQDNs:
-    #     - matchName: "sts.eu-central-1.amazonaws.com"
-    #   toPorts:
-    #     - ports:
-    #         - port: "443"
-    - toEntities:
-        - world
+    - toFQDNs:
+        - matchPattern: "s3.eu-central-1.amazonaws.com"
+      toPorts:
+        - ports:
+            - port: "443"
+    - toFQDNs:
+        - matchName: "sts.eu-central-1.amazonaws.com"
       toPorts:
         - ports:
             - port: "443"
