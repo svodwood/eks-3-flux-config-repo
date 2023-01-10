@@ -14,6 +14,11 @@ spec:
         - ports:
             - port: "3000"
   egress:
+    - toFQDNs:
+        - graphql.cilium.vodwood.codes/
+      toPorts:
+        - ports:
+            - port: "443"
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: kube-system
@@ -25,8 +30,3 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
-    - toFQDNs:
-        - matchPattern: "graphql.cilium.vodwood.codes"
-      toPorts:
-        - ports:
-            - port: "443"
