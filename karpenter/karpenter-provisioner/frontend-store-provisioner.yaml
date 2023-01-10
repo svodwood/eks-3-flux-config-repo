@@ -1,0 +1,38 @@
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: frontend-store-provisioner
+spec:
+  labels:
+    node-type: frontend-store
+  requirements:
+    - key: "karpenter.sh/capacity-type"
+      operator: In
+      values: ["on-demand"]
+    - key: "kubernetes.io/arch"
+      operator: In
+      values: ["arm64"]
+    - key: "node.kubernetes.io/instance-type"
+      operator: In
+      values: ["t4g.medium", "t4g.large"]
+  limits:
+    resources:
+      cpu: 10
+      memory: 10Gi
+  providerRef:
+    name: frontend-store
+  ttlSecondsAfterEmpty: 60
+  ttlSecondsUntilExpired: 3600
+---
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: frontend-store
+spec:
+  amiFamily: Bottlerocket
+  subnetSelector:
+    karpenter.sh/discovery: cilium-web-demo
+  securityGroupSelector:
+    aws-ids: "sg-0e4b5d6ff6f9b73e0, sg-02c8ed0e928f4cc54"
+  tags:
+    Name: "frontend-store-node"
