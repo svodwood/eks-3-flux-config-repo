@@ -15,7 +15,7 @@ spec:
             - port: "3000"
   egress:
     - toFQDNs:
-        - graphql.cilium.vodwood.codes/
+        - graphql.cilium.vodwood.codes
       toPorts:
         - ports:
             - port: "443"
